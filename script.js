@@ -11,7 +11,7 @@ const RANGES = [
 ];
 
 async function fetchData(range) {
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
+    const url = `\https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`\;
 
     try {
         const response = await fetch(url);
