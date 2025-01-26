@@ -45,36 +45,26 @@ document.addEventListener("DOMContentLoaded", function() {
     const titles = document.querySelectorAll('.title');
     const contents = document.querySelectorAll('.table-content');
 
-    // Загрузка данных для каждой таблицы
-    RANGES.forEach((range, index) => {
-        fetchData(range).then(data => {
-            populateTable(`table${index+1}`, data);
-        });
-    });
-
-    // Устанавливаем максимально возможную высоту для каждого блока
     contents.forEach(content => {
-        content.style.maxHeight = `${content.scrollHeight}px`;
+        // Сначала скрываем все таблицы
+        content.style.maxHeight = null;
     });
 
     titles.forEach((title, index) => {
         title.addEventListener('click', function() {
             const content = contents[index];
-
             if (content.style.maxHeight) {
-                content.style.maxHeight = null; // Скрываем, если открыто
+                content.style.maxHeight = null;
             } else {
-                content.style.maxHeight = `${content.scrollHeight}px`; // Показываем, если скрыто
+                content.style.maxHeight = content.scrollHeight + "px";
             }
         });
     });
 });
 
-function filterTables() {
-    const filter = document.getElementById('filter').value.toLowerCase();
-    document.querySelectorAll('.results-table tbody tr').forEach(row => {
-        const nameCell = row.children[1]; // Индекс 1 для столбца Name
-        const name = nameCell.textContent.toLowerCase();
-        row.style.display = name.includes(filter) ? '' : 'none';
+function toggleVisibility() {
+    const contentSections = document.querySelectorAll('.table-content');
+    contentSections.forEach(section => {
+        section.style.maxHeight = section.style.maxHeight ? null : section.scrollHeight + "px";
     });
 }
