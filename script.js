@@ -41,29 +41,20 @@ function populateTable(tableId, data) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    const titles = document.querySelectorAll('.title');
-    const contents = document.querySelectorAll('.table-content');
+       const titles = document.querySelectorAll('.title');
+       const contents = document.querySelectorAll('.table-content');
 
-    contents.forEach(content => {
-        // Сначала скрываем все таблицы
-        content.style.maxHeight = null;
-    });
-
-    titles.forEach((title, index) => {
-        title.addEventListener('click', function() {
-            const content = contents[index];
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-            } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-            }
-        });
-    });
-});
-
-function toggleVisibility() {
-    const contentSections = document.querySelectorAll('.table-content');
-    contentSections.forEach(section => {
-        section.style.maxHeight = section.style.maxHeight ? null : section.scrollHeight + "px";
-    });
-}
+       titles.forEach((title, index) => {
+           title.addEventListener('click', function() {
+               const content = contents[index];
+               if (content.style.maxHeight) {
+                   content.style.maxHeight = null;
+                   title.classList.remove('active'); // удалить класс при закрытии
+               } else {
+                   content.style.maxHeight = content.scrollHeight + "px";
+                   title.classList.add('active'); // добавить класс при открытии
+               }
+           });
+       });
+   });
+   
