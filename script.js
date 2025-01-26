@@ -1,3 +1,4 @@
+// Проверьте файл на наличие всех закрывающих скобок и запятых
 const SPREADSHEET_ID = '1Z6MkmyCU_xELc_riP_xeCRzXr4rNhTQ2pyjwQ0ZcGYk';
 const API_KEY = 'AIzaSyBmSkNijS0qEa9j8ZrvFItYggN_FgXe5jg';
 const RANGES = [
@@ -10,10 +11,9 @@ const RANGES = [
     "'Slow ranking'!T5:V35"   // Force
 ];
 
-// Используйте правильные обратные кавычки
+// Проверьте саму декларацию функции и не произошел ли сдвиг кода, например, из-за некорректного копирования
 async function fetchData(range) {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
-
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -26,7 +26,6 @@ async function fetchData(range) {
         return [];
     }
 }
-
 function populateTable(tableId, data) {
     const tableBody = document.getElementById(tableId).querySelector('tbody');
     tableBody.innerHTML = '';
