@@ -39,6 +39,21 @@ function populateTable(tableId, data) {
     });
 }
 
+function filterTables() {
+    const filterValue = document.getElementById('filter').value.toLowerCase();
+    const tables = document.querySelectorAll('.results-table tbody');
+  
+    tables.forEach(tbody => {
+        const rows = tbody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const cell = row.querySelector('td:nth-child(2)'); // Предполагается, что имя находится во второй колонке
+            if (cell) {
+                const text = cell.textContent.toLowerCase();
+                row.style.display = text.includes(filterValue) ? '' : 'none';
+            }
+        });
+    });
+}
 document.addEventListener("DOMContentLoaded", async function() {
     const contentIds = ['table1', 'table2', 'table3', 'table4', 'table5', 'table6', 'table7'];
     
