@@ -3,7 +3,7 @@
 }
 
 .results-table {
-    display: none; /* Изначально скрываем таблицы */
+    display: table; /* Устанавливаем display как table, чтобы таблицы были видимы */
     width: 100%;
     border-collapse: collapse;
 }
@@ -13,25 +13,15 @@
     padding: 8px;
 }
 
-.toggle {
-    display: block;
-    background-color: #f2f2f2;
-    margin: 10px 0;
-    padding: 10px;
-    cursor: pointer;
-}
 .title {
-    font-size: 24px; /* увеличиваем размер шрифта */
-    font-weight: bold; /* делаем текст жирным */
-    color: #333; /* задаем темный цвет для контраста */
-    cursor: pointer; /* рука-указатель при наведении, чтобы пользователь понял, что элемент кликабелен */
-    padding: 10px 0; /* добавляем небольшие отступы для улучшения восприятия */
+    font-size: 24px; /* Увеличиваем размер шрифта */
+    font-weight: bold; /* Делаем текст жирным */
+    color: #333; /* Задаем темный цвет для контраста */
+    padding: 10px 0; /* Добавляем небольшие отступы для улучшения восприятия */
 }
 
+/* Убираем классы и стили для анимации, если она не нужна */
 .table-content {
-   max-height: none;  /* Убираем ограничение по высоте */
-   transition: max-height 0.2s ease-out; /* Плавная анимация при закрытии */
-   overflow: hidden;
+    max-height: none; /* Убираем ограничение по высоте */
+    overflow: visible; /* Убедитесь, что все элементы отображаются */
 }
-
-   
