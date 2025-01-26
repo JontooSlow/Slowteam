@@ -1,6 +1,6 @@
 const SPREADSHEET_ID = '1Z6MkmyCU_xELc_riP_xeCRzXr4rNhTQ2pyjwQ0ZcGYk';
 const API_KEY = 'AIzaSyBmSkNijS0qEa9j8ZrvFItYggN_FgXe5jg';
-const RANGE = 'Sheet1!B5:D35'; // Измените на нужный диапазон
+const RANGE = "'Slow ranking'!B5:D35"; // Измените на нужный диапазон
 
 async function fetchData() {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`;
