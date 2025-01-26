@@ -3,23 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slow ranking</title>
+    <title>Championship Results</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Championship Results</h1>
-    <table id="results-table">
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Name</th>
-                <th>Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Results will be populated here -->
-        </tbody>
-    </table>
+    
+    <!-- Фильтр -->
+    <input type="text" id="filter" placeholder="Filter by name" oninput="filterTables()">
+
+    <!-- Таблицы -->
+    <div class="tables">
+        <div class="table-container">
+            <button class="toggle" onclick="toggleTable(this)">Phys</button>
+            <table id="table1" class="results-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <div class="table-container">
+            <button class="toggle" onclick="toggleTable(this)">Light</button>
+            <table id="table2" class="results-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Добавьте следующие таблицы аналогично -->
+        <div class="table-container">
+            <button class="toggle" onclick="toggleTable(this)">Dark</button>
+            <table id="table3" class="results-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="table-container">
+            <button class="toggle" onclick="toggleTable(this)">Fire</button>
+            <table id="table4" class="results-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="table-container">
+            <button class="toggle" onclick="toggleTable(this)">Ice</button>
+            <table id="table5" class="results-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="table-container">
+            <button class="toggle" onclick="toggleTable(this)">Elec</button>
+            <table id="table6" class="results-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="table-container">
+            <button class="toggle" onclick="toggleTable(this)">Force</button>
+            <table id="table7" class="results-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
