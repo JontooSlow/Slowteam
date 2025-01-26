@@ -41,20 +41,21 @@ function populateTable(tableId, data) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-       const titles = document.querySelectorAll('.title');
-       const contents = document.querySelectorAll('.table-content');
+   const titles = document.querySelectorAll('.title');
+   const contents = document.querySelectorAll('.table-content');
 
-       titles.forEach((title, index) => {
-           title.addEventListener('click', function() {
-               const content = contents[index];
-               if (content.style.maxHeight) {
-                   content.style.maxHeight = null;
-                   title.classList.remove('active'); // удалить класс при закрытии
-               } else {
-                   content.style.maxHeight = content.scrollHeight + "px";
-                   title.classList.add('active'); // добавить класс при открытии
-               }
-           });
+   titles.forEach((title, index) => {
+       title.addEventListener('click', function() {
+           const content = contents[index];
+           if (content.style.maxHeight && content.style.maxHeight !== "none") {
+               content.style.maxHeight = null;
+               title.classList.remove('active'); // удаляем класс при закрытии
+           } else {
+               content.style.maxHeight = content.scrollHeight + "px";
+               title.classList.add('active'); // добавляем класс при открытии
+           }
        });
    });
+});
+   
    
