@@ -1,15 +1,16 @@
 const SPREADSHEET_ID = '1Z6MkmyCU_xELc_riP_xeCRzXr4rNhTQ2pyjwQ0ZcGYk';
 const API_KEY = 'AIzaSyBmSkNijS0qEa9j8ZrvFItYggN_FgXe5jg';
 const RANGES = [
-    "'Slow ranking'!B6:D35",  // Phys
-    "'Slow ranking'!E6:G35",  // Light
-    "'Slow ranking'!H6:J35",  // Dark
-    "'Slow ranking'!K6:M35",  // Fire
-    "'Slow ranking'!N6:P35",  // Ice
-    "'Slow ranking'!Q6:S35",  // Elec
-    "'Slow ranking'!T6:V35"   // Force
+    "'Slow ranking'!B5:D35",  // Phys
+    "'Slow ranking'!E5:G35",  // Light
+    "'Slow ranking'!H5:J35",  // Dark
+    "'Slow ranking'!K5:M35",  // Fire
+    "'Slow ranking'!N5:P35",  // Ice
+    "'Slow ranking'!Q5:S35",  // Elec
+    "'Slow ranking'!T5:V35"   // Force
 ];
 
+// Используем правильные кавычки (одинарные или двойные) вокруг URL
 async function fetchData(range) {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
 
@@ -51,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Устанавливаем максимально возможную высоту для каждого блока, чтобы они были видны
+    // Устанавливаем максимально возможную высоту для каждого блока
     contents.forEach(content => {
         content.style.maxHeight = `${content.scrollHeight}px`;
     });
