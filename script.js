@@ -1,4 +1,3 @@
-// Проверьте файл на наличие всех закрывающих скобок и запятых
 const SPREADSHEET_ID = '1Z6MkmyCU_xELc_riP_xeCRzXr4rNhTQ2pyjwQ0ZcGYk';
 const API_KEY = 'AIzaSyBmSkNijS0qEa9j8ZrvFItYggN_FgXe5jg';
 const RANGES = [
@@ -11,7 +10,6 @@ const RANGES = [
     "'Slow ranking'!T5:V35"   // Force
 ];
 
-// Проверьте саму декларацию функции и не произошел ли сдвиг кода, например, из-за некорректного копирования
 async function fetchData(range) {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
     try {
@@ -26,6 +24,7 @@ async function fetchData(range) {
         return [];
     }
 }
+
 function populateTable(tableId, data) {
     const tableBody = document.getElementById(tableId).querySelector('tbody');
     tableBody.innerHTML = '';
@@ -40,22 +39,11 @@ function populateTable(tableId, data) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-   const titles = document.querySelectorAll('.title');
-   const contents = document.querySelectorAll('.table-content');
-
-   titles.forEach((title, index) => {
-       title.addEventListener('click', function() {
-           const content = contents[index];
-           if (content.style.maxHeight && content.style.maxHeight !== "none") {
-               content.style.maxHeight = null;
-               title.classList.remove('active'); // удаляем класс при закрытии
-           } else {
-               content.style.maxHeight = content.scrollHeight + "px";
-               title.classList.add('active'); // добавляем класс при открытии
-           }
-       });
-   });
+document.addEventListener("DOMContentLoaded", async function() {
+    const contentIds = ['phys-table', 'light-table', 'dark-table', 'fire-table', 'ice-table', 'elec-table', 'force-table'];
+    
+    for (let i = 0; i < RANGES.length; i++) {
+        const data = await fetchData(RANGES[i]);
+        populateTable(contentIds[i], data);
+    }
 });
-   
-   
