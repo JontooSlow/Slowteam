@@ -40,7 +40,7 @@ function populateTable(tableId, data) {
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
-    const contentIds = ['phys-table', 'light-table', 'dark-table', 'fire-table', 'ice-table', 'elec-table', 'force-table'];
+    const contentIds = ['table1', 'table2', 'table3', 'table4', 'table5', 'table6', 'table7'];
     
     for (let i = 0; i < RANGES.length; i++) {
         const data = await fetchData(RANGES[i]);
