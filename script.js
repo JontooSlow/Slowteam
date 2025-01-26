@@ -10,7 +10,7 @@ const RANGES = [
     "'Slow ranking'!T5:V35"   // Force
 ];
 
-// Используем правильные кавычки (одинарные или двойные) вокруг URL
+// Используйте правильные обратные кавычки
 async function fetchData(range) {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
 
