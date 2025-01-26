@@ -11,7 +11,7 @@ const RANGES = [
 ];
 
 async function fetchData(range) {
-    const url = `\https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`\;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
 
     try {
         const response = await fetch(url);
@@ -40,16 +40,34 @@ function populateTable(tableId, data) {
     });
 }
 
-RANGES.forEach((range, index) => {
-    fetchData(range).then(data => {
-        populateTable(`table${index+1}`, data);
+document.addEventListener("DOMContentLoaded", function() {
+    const titles = document.querySelectorAll('.title');
+    const contents = document.querySelectorAll('.table-content');
+
+    // Загрузка данных для каждой таблицы
+    RANGES.forEach((range, index) => {
+        fetchData(range).then(data => {
+            populateTable(`table${index+1}`, data);
+        });
+    });
+
+    // Устанавливаем максимально возможную высоту для каждого блока, чтобы они были видны
+    contents.forEach(content => {
+        content.style.maxHeight = `${content.scrollHeight}px`;
+    });
+
+    titles.forEach((title, index) => {
+        title.addEventListener('click', function() {
+            const content = contents[index];
+
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null; // Скрываем, если открыто
+            } else {
+                content.style.maxHeight = `${content.scrollHeight}px`; // Показываем, если скрыто
+            }
+        });
     });
 });
-
-function toggleTable(button) {
-    const table = button.nextElementSibling;
-    table.style.display = table.style.display === 'none' ? 'table' : 'none';
-}
 
 function filterTables() {
     const filter = document.getElementById('filter').value.toLowerCase();
