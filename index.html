@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,105 +16,120 @@
     <!-- Tables -->
     <div class="tables">
         <div class="table-container">
-            <button class="toggle" onclick="toggleTable(this)">Phys</button>
-            <table id="table1" class="results-table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="title">Phys</div>
+            <div class="table-content">
+                <table id="table1" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
         
+        <!-- Repeat for other tables -->
         <div class="table-container">
-            <button class="toggle" onclick="toggleTable(this)">Light</button>
-            <table id="table2" class="results-table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- Добавьте следующие таблицы аналогично -->
-        <div class="table-container">
-            <button class="toggle" onclick="toggleTable(this)">Dark</button>
-            <table id="table3" class="results-table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="title">Light</div>
+            <div class="table-content">
+                <table id="table2" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
 
         <div class="table-container">
-            <button class="toggle" onclick="toggleTable(this)">Fire</button>
-            <table id="table4" class="results-table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="title">Dark</div>
+            <div class="table-content">
+                <table id="table3" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
 
         <div class="table-container">
-            <button class="toggle" onclick="toggleTable(this)">Ice</button>
-            <table id="table5" class="results-table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="title">Fire</div>
+            <div class="table-content">
+                <table id="table4" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
 
         <div class="table-container">
-            <button class="toggle" onclick="toggleTable(this)">Elec</button>
-            <table id="table6" class="results-table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="title">Ice</div>
+            <div class="table-content">
+                <table id="table5" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
 
         <div class="table-container">
-            <button class="toggle" onclick="toggleTable(this)">Force</button>
-            <table id="table7" class="results-table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="title">Elec</div>
+            <div class="table-content">
+                <table id="table6" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="table-container">
+            <div>
+class="title">Force</div>
+            <div class="table-content">
+                <table id="table7" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
