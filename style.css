@@ -28,7 +28,9 @@
     padding: 10px 0; /* добавляем небольшие отступы для улучшения восприятия */
 }
 
-.table-content {
-    transition: max-height 0.2s ease-out; /* плавная анимация при открытии/закрытии */
-    overflow: hidden;
-}
+   .table-content {
+       max-height: 0;
+       transition: max-height 0.2s ease-out;
+       overflow: hidden;
+   }
+   
