@@ -1,13 +1,13 @@
 const SPREADSHEET_ID = '1Z6MkmyCU_xELc_riP_xeCRzXr4rNhTQ2pyjwQ0ZcGYk';
 const API_KEY = 'AIzaSyBmSkNijS0qEa9j8ZrvFItYggN_FgXe5jg';
 const RANGES = [
-    "'Slow ranking'!B6:D35",  // Phys
-    "'Slow ranking'!E6:G35",  // Light
-    "'Slow ranking'!H6:J35",  // Dark
-    "'Slow ranking'!K6:M35",  // Fire
-    "'Slow ranking'!N6:P35",  // Ice
-    "'Slow ranking'!Q6:S35",  // Elec
-    "'Slow ranking'!T6:V35"   // Force
+    "'Slow ranking'!B6:D36",  // Phys
+    "'Slow ranking'!E6:G36",  // Light
+    "'Slow ranking'!H6:J36",  // Dark
+    "'Slow ranking'!K6:M36",  // Fire
+    "'Slow ranking'!N6:P36",  // Ice
+    "'Slow ranking'!Q6:S36",  // Elec
+    "'Slow ranking'!T6:V36"   // Force
 ];
 
 async function fetchData(range) {
