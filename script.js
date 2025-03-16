@@ -7,8 +7,8 @@ const RANGES = [
     "'Slow ranking'!K6:M36",  // Fire
     "'Slow ranking'!N6:P36",  // Ice
     "'Slow ranking'!Q6:S36",  // Elec
-    "'Slow ranking'!T6:V36",   // Force
-    "'Slow ranking'!W6:Y36"   // Total
+    "'Slow ranking'!T6:V36"   // Force
+   
 ];
 
 async function fetchData(range) {
@@ -56,7 +56,7 @@ function filterTables() {
     });
 }
 document.addEventListener("DOMContentLoaded", async function() {
-    const contentIds = ['table1', 'table2', 'table3', 'table4', 'table5', 'table6', 'table7', 'table8'];
+    const contentIds = ['table1', 'table2', 'table3', 'table4', 'table5', 'table6', 'table7'];
     
     for (let i = 0; i < RANGES.length; i++) {
         const data = await fetchData(RANGES[i]);
