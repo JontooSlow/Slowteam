@@ -7,7 +7,7 @@ const RANGES = [
     "'Slow ranking'!K6:M36",  // Fire
     "'Slow ranking'!N6:P36",  // Ice
     "'Slow ranking'!Q6:S36",  // Elec
-    "'Slow ranking'!T6:V36"   // Force
+    "'Slow ranking'!T6:V36",   // Force
     "'Slow ranking'!W6:Y36"   // Total
 ];
 
