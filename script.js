@@ -46,6 +46,7 @@ const ELEMENT_COLORS = {
 
 let tableData = {}; // Store original data for sorting
 let previousTableData = {}; // Store previous data for change detection
+let isFirstLoad = true; // Flag to track first load
 
 async function fetchData(range) {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
@@ -263,6 +264,9 @@ document.addEventListener("DOMContentLoaded", async function() {
         await populateTable(contentIds[i], allData[i]);
     }
     
+    // Mark first load as complete AFTER all tables are populated
+    isFirstLoad = false;
+    
     // Remove loading state
     tableContents.forEach(content => {
         content.classList.remove('loading');
@@ -356,44 +360,56 @@ function createRankingEmbed(elementName, data) {
 async function sendRankingUpdate(elementIndex, elementName, data) {
     // Check if data has changed by comparing with previous data
     const tableId = `table${elementIndex + 1}`;
-    const previousData = previousTableData[tableId];
     
-    // Skip if no previous data (first load) - don't send on first load
-    if (!previousData || previousData.length === 0) {
+    // Skip if first load - don't send on first load
+    if (isFirstLoad) {
         console.log(`[${tableId}] First load - skipping webhook`);
         return true; // Return true to allow saving
     }
     
-    // Normalize data for comparison (remove empty rows, trim strings, normalize numbers)
+    // Load previous data directly from localStorage (more reliable)
+    const storedPreviousData = localStorage.getItem(`previous_${tableId}`);
+    let previousData = null;
+    
+    if (storedPreviousData) {
+        try {
+            previousData = JSON.parse(storedPreviousData);
+        } catch (e) {
+            console.error(`[${tableId}] Error parsing previous data:`, e);
+            previousData = null;
+        }
+    }
+    
+    // Skip if no previous data - don't send
+    if (!previousData || !Array.isArray(previousData) || previousData.length === 0) {
+        console.log(`[${tableId}] No previous data - skipping webhook`);
+        return true; // Return true to allow saving
+    }
+    
+    // Normalize data for comparison - create a hash-like string for comparison
     const normalizeData = (dataArray) => {
-        if (!dataArray || !Array.isArray(dataArray)) return [];
+        if (!dataArray || !Array.isArray(dataArray)) return '';
         
         return dataArray
-            .filter(row => row && Array.isArray(row) && row.length > 0)
+            .filter(row => row && Array.isArray(row) && row.length >= 2) // Must have at least rank and name
             .map(row => {
-                return row.map(cell => {
-                    if (cell === null || cell === undefined) return '';
-                    const str = cell.toString().trim();
-                    // Try to normalize numbers
-                    const num = parseFloat(str);
-                    if (!isNaN(num) && str === num.toString()) {
-                        return num;
-                    }
-                    return str;
-                });
+                // Only compare rank (index 0), name (index 1), and score (index 2)
+                const rank = row[0] ? String(row[0]).trim() : '';
+                const name = row[1] ? String(row[1]).trim() : '';
+                const score = row[2] ? String(row[2]).trim() : '';
+                return `${rank}|${name}|${score}`;
             })
-            .filter(row => row.some(cell => cell !== ''));
+            .filter(line => line !== '||') // Remove completely empty lines
+            .join('||');
     };
     
     const normalizedPrevious = normalizeData(previousData);
     const normalizedCurrent = normalizeData(data);
     
-    // Compare normalized data
-    const prevStr = JSON.stringify(normalizedPrevious);
-    const currStr = JSON.stringify(normalizedCurrent);
-    const dataChanged = prevStr !== currStr;
+    // Compare normalized data strings
+    const dataChanged = normalizedPrevious !== normalizedCurrent;
     
-    console.log(`[${tableId}] Previous: ${normalizedPrevious.length} rows, Current: ${normalizedCurrent.length} rows`);
+    console.log(`[${tableId}] Previous hash length: ${normalizedPrevious.length}, Current hash length: ${normalizedCurrent.length}`);
     console.log(`[${tableId}] Changed: ${dataChanged}`);
     
     if (!dataChanged) {
@@ -404,6 +420,8 @@ async function sendRankingUpdate(elementIndex, elementName, data) {
     
     // Data has changed - send update
     console.log(`[${tableId}] Changes detected - sending webhook`);
+    console.log(`[${tableId}] Previous: ${normalizedPrevious.substring(0, 100)}...`);
+    console.log(`[${tableId}] Current: ${normalizedCurrent.substring(0, 100)}...`);
     const embed = createRankingEmbed(elementName, data);
     await sendDiscordWebhook(DISCORD_WEBHOOK_URL, null, [embed]);
     return true; // Return true to allow saving
