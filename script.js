@@ -1,6 +1,9 @@
 const SPREADSHEET_ID = '1Z6MkmyCU_xELc_riP_xeCRzXr4rNhTQ2pyjwQ0ZcGYk';
 const API_KEY = 'AIzaSyBmSkNijS0qEa9j8ZrvFItYggN_FgXe5jg';
 
+// Discord Webhook URL (hardcoded)
+const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1440277080704159795/i04LVU7LVn4vDkhghfxEe2bzPr59FH_M2khFJduw1ziVRoBv9PznyyypKWmQ3gWM4jmC';
+
 const RANGES = [
     "'Slow ranking'!B6:D36",  // Phys
     "'Slow ranking'!E6:G36",  // Light
@@ -63,11 +66,20 @@ function populateTable(tableId, data) {
     const tableBody = document.getElementById(tableId).querySelector('tbody');
     tableBody.innerHTML = '';
     
-    // Store previous data for change detection
-    previousTableData[tableId] = JSON.parse(JSON.stringify(tableData[tableId] || []));
+    // Load previous data from localStorage for change detection
+    const storedPreviousData = localStorage.getItem(`previous_${tableId}`);
+    if (storedPreviousData) {
+        previousTableData[tableId] = JSON.parse(storedPreviousData);
+    } else {
+        // First time loading - initialize as empty array
+        previousTableData[tableId] = [];
+    }
     
-    // Store original data
+    // Store current data
     tableData[tableId] = data;
+    
+    // Save current data as previous for next load (in localStorage)
+    localStorage.setItem(`previous_${tableId}`, JSON.stringify(data));
     
     if (data.length === 0) {
         return;
@@ -95,11 +107,10 @@ function populateTable(tableId, data) {
     // Add click handlers to table headers for sorting
     addSortHandlers(tableId);
     
-    // Send webhook update if enabled
+    // Send webhook update only if data has changed
     const tableIndex = parseInt(tableId.replace('table', '')) - 1;
     if (tableIndex >= 0 && tableIndex < ELEMENT_NAMES.length) {
-        const topOnly = localStorage.getItem('discord_webhook_top_only') === 'true';
-        sendRankingUpdate(tableIndex, ELEMENT_NAMES[tableIndex], data, topOnly);
+        sendRankingUpdate(tableIndex, ELEMENT_NAMES[tableIndex], data);
     }
 }
 
@@ -250,19 +261,6 @@ document.addEventListener("DOMContentLoaded", async function() {
         content.classList.remove('loading');
     });
     
-    // Send initial update to Discord if auto-update is enabled
-    // Wait a bit to ensure all data is loaded
-    setTimeout(() => {
-        const autoUpdate = localStorage.getItem('discord_webhook_auto') !== 'false';
-        if (autoUpdate) {
-            // Only send if this is the first load (no previous data)
-            const hasPreviousData = Object.keys(previousTableData).length > 0;
-            if (!hasPreviousData) {
-                sendAllRankingsUpdate();
-            }
-        }
-    }, 2000);
-    
     // Add smooth scroll behavior
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -277,104 +275,9 @@ document.addEventListener("DOMContentLoaded", async function() {
         });
     });
     
-    // Initialize webhook settings
-    initWebhookSettings();
 });
 
 // Discord Webhook Functions
-function initWebhookSettings() {
-    // Load saved webhook URL
-    const savedWebhook = localStorage.getItem('discord_webhook_url');
-    const autoUpdate = localStorage.getItem('discord_webhook_auto') !== 'false';
-    const topOnly = localStorage.getItem('discord_webhook_top_only') === 'true';
-    
-    if (savedWebhook) {
-        document.getElementById('webhook-url').value = savedWebhook;
-    }
-    
-    document.getElementById('webhook-auto-update').checked = autoUpdate;
-    document.getElementById('webhook-top-only').checked = topOnly;
-    
-    // Event listeners
-    document.getElementById('webhook-toggle').addEventListener('click', () => {
-        const panel = document.getElementById('webhook-panel');
-        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-    });
-    
-    document.getElementById('webhook-save').addEventListener('click', saveWebhook);
-    document.getElementById('webhook-test').addEventListener('click', testWebhook);
-    document.getElementById('webhook-clear').addEventListener('click', clearWebhook);
-    
-    document.getElementById('webhook-auto-update').addEventListener('change', (e) => {
-        localStorage.setItem('discord_webhook_auto', e.target.checked);
-    });
-    
-    document.getElementById('webhook-top-only').addEventListener('change', (e) => {
-        localStorage.setItem('discord_webhook_top_only', e.target.checked);
-    });
-}
-
-function saveWebhook() {
-    const webhookUrl = document.getElementById('webhook-url').value.trim();
-    
-    if (!webhookUrl) {
-        showWebhookStatus('Please enter a webhook URL', 'error');
-        return;
-    }
-    
-    if (!webhookUrl.startsWith('https://discord.com/api/webhooks/')) {
-        showWebhookStatus('Invalid webhook URL format', 'error');
-        return;
-    }
-    
-    localStorage.setItem('discord_webhook_url', webhookUrl);
-    showWebhookStatus('Webhook URL saved successfully!', 'success');
-}
-
-function clearWebhook() {
-    document.getElementById('webhook-url').value = '';
-    localStorage.removeItem('discord_webhook_url');
-    showWebhookStatus('Webhook URL cleared', 'success');
-}
-
-async function testWebhook() {
-    const webhookUrl = document.getElementById('webhook-url').value.trim() || localStorage.getItem('discord_webhook_url');
-    
-    if (!webhookUrl) {
-        showWebhookStatus('Please enter a webhook URL first', 'error');
-        return;
-    }
-    
-    showWebhookStatus('Sending test message...', 'success');
-    
-    const testEmbed = {
-        title: '🎮 Slow Ranking - Webhook Test',
-        description: 'If you see this message, your webhook is working correctly!',
-        color: 0x5865F2,
-        timestamp: new Date().toISOString(),
-        footer: {
-            text: 'Slow Ranking Bot'
-        }
-    };
-    
-    const success = await sendDiscordWebhook(webhookUrl, null, [testEmbed]);
-    
-    if (success) {
-        showWebhookStatus('✅ Test message sent successfully! Check your Discord channel.', 'success');
-    } else {
-        showWebhookStatus('❌ Failed to send test message. Check your webhook URL.', 'error');
-    }
-}
-
-function showWebhookStatus(message, type) {
-    const statusDiv = document.getElementById('webhook-status');
-    statusDiv.textContent = message;
-    statusDiv.className = `webhook-status ${type}`;
-    
-    setTimeout(() => {
-        statusDiv.style.display = 'none';
-    }, 5000);
-}
 
 async function sendDiscordWebhook(webhookUrl, content, embeds = null) {
     try {
@@ -411,14 +314,13 @@ async function sendDiscordWebhook(webhookUrl, content, embeds = null) {
     }
 }
 
-function createRankingEmbed(elementName, data, topOnly = false) {
+function createRankingEmbed(elementName, data) {
     const emoji = ELEMENT_EMOJIS[elementName] || '📊';
     const color = ELEMENT_COLORS[elementName] || 0x5865F2;
     
-    const displayData = topOnly ? data.slice(0, 3) : data.slice(0, 10);
-    
+    // Show ALL data, not just top 10
     let description = '';
-    displayData.forEach((row, index) => {
+    data.forEach((row, index) => {
         const rank = row[0] || (index + 1);
         const name = row[1] || 'N/A';
         const score = row[2] || '0';
@@ -427,8 +329,10 @@ function createRankingEmbed(elementName, data, topOnly = false) {
         description += `${medal} **${name}** - ${score}\n`;
     });
     
-    if (data.length > displayData.length && !topOnly) {
-        description += `\n*... and ${data.length - displayData.length} more*`;
+    // Discord embed description has a limit of 4096 characters
+    // If description is too long, truncate it
+    if (description.length > 4000) {
+        description = description.substring(0, 4000) + '\n*... (truncated due to length limit)*';
     }
     
     return {
@@ -442,33 +346,31 @@ function createRankingEmbed(elementName, data, topOnly = false) {
     };
 }
 
-async function sendRankingUpdate(elementIndex, elementName, data, topOnly = false) {
-    const webhookUrl = localStorage.getItem('discord_webhook_url');
-    const autoUpdate = localStorage.getItem('discord_webhook_auto') !== 'false';
+async function sendRankingUpdate(elementIndex, elementName, data) {
+    // Check if data has changed by comparing with previous data
+    const tableId = `table${elementIndex + 1}`;
+    const previousData = previousTableData[tableId];
     
-    if (!webhookUrl || !autoUpdate) {
+    // Skip if no previous data (first load) or if data hasn't changed
+    if (!previousData || previousData.length === 0) {
+        // First load - don't send, just store the data
         return;
     }
     
-    // Check if data has changed
-    const previousData = previousTableData[`table${elementIndex + 1}`];
-    if (previousData && JSON.stringify(previousData) === JSON.stringify(data)) {
-        return; // No changes
+    // Compare data - check if anything changed
+    const dataChanged = JSON.stringify(previousData) !== JSON.stringify(data);
+    
+    if (!dataChanged) {
+        return; // No changes, don't send
     }
     
-    const embed = createRankingEmbed(elementName, data, topOnly);
-    await sendDiscordWebhook(webhookUrl, null, [embed]);
+    // Data has changed - send update
+    const embed = createRankingEmbed(elementName, data);
+    await sendDiscordWebhook(DISCORD_WEBHOOK_URL, null, [embed]);
 }
 
-async function sendAllRankingsUpdate() {
-    const webhookUrl = localStorage.getItem('discord_webhook_url');
-    const autoUpdate = localStorage.getItem('discord_webhook_auto') !== 'false';
-    const topOnly = localStorage.getItem('discord_webhook_top_only') === 'true';
-    
-    if (!webhookUrl || !autoUpdate) {
-        return;
-    }
-    
+// Function to manually trigger ranking update (can be called from browser console)
+window.sendRankingUpdate = async function() {
     const embeds = [];
     
     for (let i = 0; i < ELEMENT_NAMES.length; i++) {
@@ -476,7 +378,7 @@ async function sendAllRankingsUpdate() {
         const data = tableData[tableId];
         
         if (data && data.length > 0) {
-            const embed = createRankingEmbed(ELEMENT_NAMES[i], data, topOnly);
+            const embed = createRankingEmbed(ELEMENT_NAMES[i], data);
             embeds.push(embed);
         }
     }
@@ -489,15 +391,11 @@ async function sendAllRankingsUpdate() {
         }
         
         for (const chunk of chunks) {
-            await sendDiscordWebhook(webhookUrl, '📊 **Ranking Update**', chunk);
+            await sendDiscordWebhook(DISCORD_WEBHOOK_URL, '📊 **Ranking Update**', chunk);
         }
+        alert('Ranking update sent to Discord!');
+    } else {
+        alert('No data to send!');
     }
-}
-
-// Function to manually trigger ranking update (can be called from browser console)
-window.sendRankingUpdate = async function() {
-    await sendAllRankingsUpdate();
-    alert('Ranking update sent to Discord!');
 };
-
 
