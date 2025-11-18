@@ -11,9 +11,33 @@
 </head>
 <body>
     <div class="header">
-        <h1> Slow Ranking </h1>
+        <h1><img src="images/logo.png" alt="Logo" class="header-icon"> Slow Ranking <img src="images/logo.png" alt="Logo" class="header-icon"></h1>
         <div class="filter-container">
-            <input type="text" id="filter" placeholder="🔍 Search by name..." oninput="filterTables()">
+            <input type="text" id="filter" placeholder="Search by name..." oninput="filterTables()">
+        </div>
+        <div class="webhook-settings">
+            <button id="webhook-toggle" class="webhook-toggle-btn">⚙️ Webhook Settings</button>
+            <div id="webhook-panel" class="webhook-panel" style="display: none;">
+                <h3>Discord Webhook Configuration</h3>
+                <p class="webhook-info">Get your webhook URL from Discord: Server Settings → Integrations → Webhooks</p>
+                <input type="text" id="webhook-url" placeholder="https://discord.com/api/webhooks/..." class="webhook-input">
+                <div class="webhook-buttons">
+                    <button id="webhook-save" class="webhook-save-btn">Save Webhook</button>
+                    <button id="webhook-test" class="webhook-test-btn">Test Webhook</button>
+                    <button id="webhook-clear" class="webhook-clear-btn">Clear</button>
+                </div>
+                <div class="webhook-status" id="webhook-status"></div>
+                <div class="webhook-options">
+                    <label>
+                        <input type="checkbox" id="webhook-auto-update" checked>
+                        Auto-send updates when rankings change
+                    </label>
+                    <label>
+                        <input type="checkbox" id="webhook-top-only">
+                        Only send top 3 rankings
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -21,7 +45,7 @@
     <div class="tables">
         <div class="table-container" data-element="phys">
             <div class="title">
-                <span class="element-icon"></span>
+                <img src="images/phys.png" alt="Phys" class="element-icon">
                 <span>Phys</span>
             </div>
             <div class="table-content">
@@ -40,7 +64,7 @@
 
         <div class="table-container" data-element="light">
             <div class="title">
-                <span class="element-icon"></span>
+                <img src="images/light.png" alt="Light" class="element-icon">
                 <span>Light</span>
             </div>
             <div class="table-content">
@@ -59,7 +83,7 @@
 
         <div class="table-container" data-element="dark">
             <div class="title">
-                <span class="element-icon"></span>
+                <img src="images/dark.png" alt="Dark" class="element-icon">
                 <span>Dark</span>
             </div>
             <div class="table-content">
@@ -78,7 +102,7 @@
 
         <div class="table-container" data-element="fire">
             <div class="title">
-                <span class="element-icon"></span>
+                <img src="images/fire.png" alt="Fire" class="element-icon">
                 <span>Fire</span>
             </div>
             <div class="table-content">
@@ -97,7 +121,7 @@
 
         <div class="table-container" data-element="ice">
             <div class="title">
-                <span class="element-icon"></span>
+                <img src="images/ice.png" alt="Ice" class="element-icon">
                 <span>Ice</span>
             </div>
             <div class="table-content">
@@ -116,7 +140,7 @@
 
         <div class="table-container" data-element="elec">
             <div class="title">
-                <span class="element-icon"></span>
+                <img src="images/elec.png" alt="Elec" class="element-icon">
                 <span>Elec</span>
             </div>
             <div class="table-content">
@@ -135,7 +159,7 @@
 
         <div class="table-container" data-element="force">
             <div class="title">
-                <span class="element-icon"></span>
+                <img src="images/force.png" alt="Force" class="element-icon">
                 <span>Force</span>
             </div>
             <div class="table-content">
@@ -154,7 +178,7 @@
 
         <div class="table-container" data-element="contribution">
             <div class="title">
-                <span class="element-icon"></span>
+                <img src="images/contribution.png" alt="Contribution" class="element-icon">
                 <span>Contribution</span>
             </div>
             <div class="table-content">
@@ -173,7 +197,7 @@
 
         <div class="table-container" data-element="average">
             <div class="title">
-                <span class="element-icon"></span>
+                <img src="images/average.png" alt="Average score" class="element-icon">
                 <span>Average score</span>
             </div>
             <div class="table-content">
@@ -194,5 +218,4 @@
     <script src="script.js"></script>
 </body>
 </html>
-
 
