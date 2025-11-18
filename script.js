@@ -46,7 +46,6 @@ const ELEMENT_COLORS = {
 
 let tableData = {}; // Store original data for sorting
 let previousTableData = {}; // Store previous data for change detection
-let isFirstLoad = true; // Flag to track first load
 
 async function fetchData(range) {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${API_KEY}`;
@@ -264,9 +263,6 @@ document.addEventListener("DOMContentLoaded", async function() {
         await populateTable(contentIds[i], allData[i]);
     }
     
-    // Mark first load as complete AFTER all tables are populated
-    isFirstLoad = false;
-    
     // Remove loading state
     tableContents.forEach(content => {
         content.classList.remove('loading');
@@ -361,13 +357,7 @@ async function sendRankingUpdate(elementIndex, elementName, data) {
     // Check if data has changed by comparing with previous data
     const tableId = `table${elementIndex + 1}`;
     
-    // Skip if first load - don't send on first load
-    if (isFirstLoad) {
-        console.log(`[${tableId}] First load - skipping webhook`);
-        return true; // Return true to allow saving
-    }
-    
-    // Load previous data directly from localStorage (more reliable)
+    // Load previous data directly from localStorage
     const storedPreviousData = localStorage.getItem(`previous_${tableId}`);
     let previousData = null;
     
@@ -380,9 +370,9 @@ async function sendRankingUpdate(elementIndex, elementName, data) {
         }
     }
     
-    // Skip if no previous data - don't send
+    // Skip if no previous data (first load) - don't send on first load
     if (!previousData || !Array.isArray(previousData) || previousData.length === 0) {
-        console.log(`[${tableId}] No previous data - skipping webhook`);
+        console.log(`[${tableId}] First load or no previous data - skipping webhook`);
         return true; // Return true to allow saving
     }
     
@@ -395,11 +385,18 @@ async function sendRankingUpdate(elementIndex, elementName, data) {
             .map(row => {
                 // Only compare rank (index 0), name (index 1), and score (index 2)
                 const rank = row[0] ? String(row[0]).trim() : '';
-                const name = row[1] ? String(row[1]).trim() : '';
+                const name = row[1] ? String(row[1]).trim().toLowerCase() : ''; // Case insensitive
                 const score = row[2] ? String(row[2]).trim() : '';
-                return `${rank}|${name}|${score}`;
+                // Normalize numbers - convert "100" and "100.0" to same format
+                let normalizedScore = score;
+                const numScore = parseFloat(score);
+                if (!isNaN(numScore)) {
+                    normalizedScore = numScore.toString();
+                }
+                return `${rank}|${name}|${normalizedScore}`;
             })
             .filter(line => line !== '||') // Remove completely empty lines
+            .sort() // Sort to handle order differences
             .join('||');
     };
     
@@ -420,8 +417,12 @@ async function sendRankingUpdate(elementIndex, elementName, data) {
     
     // Data has changed - send update
     console.log(`[${tableId}] Changes detected - sending webhook`);
-    console.log(`[${tableId}] Previous: ${normalizedPrevious.substring(0, 100)}...`);
-    console.log(`[${tableId}] Current: ${normalizedCurrent.substring(0, 100)}...`);
+    if (normalizedPrevious.length > 0) {
+        console.log(`[${tableId}] Previous (first 200 chars): ${normalizedPrevious.substring(0, 200)}...`);
+    }
+    if (normalizedCurrent.length > 0) {
+        console.log(`[${tableId}] Current (first 200 chars): ${normalizedCurrent.substring(0, 200)}...`);
+    }
     const embed = createRankingEmbed(elementName, data);
     await sendDiscordWebhook(DISCORD_WEBHOOK_URL, null, [embed]);
     return true; // Return true to allow saving
