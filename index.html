@@ -15,30 +15,6 @@
         <div class="filter-container">
             <input type="text" id="filter" placeholder="Search by name..." oninput="filterTables()">
         </div>
-        <div class="webhook-settings">
-            <button id="webhook-toggle" class="webhook-toggle-btn">⚙️ Webhook Settings</button>
-            <div id="webhook-panel" class="webhook-panel" style="display: none;">
-                <h3>Discord Webhook Configuration</h3>
-                <p class="webhook-info">Get your webhook URL from Discord: Server Settings → Integrations → Webhooks</p>
-                <input type="text" id="webhook-url" placeholder="https://discord.com/api/webhooks/..." class="webhook-input">
-                <div class="webhook-buttons">
-                    <button id="webhook-save" class="webhook-save-btn">Save Webhook</button>
-                    <button id="webhook-test" class="webhook-test-btn">Test Webhook</button>
-                    <button id="webhook-clear" class="webhook-clear-btn">Clear</button>
-                </div>
-                <div class="webhook-status" id="webhook-status"></div>
-                <div class="webhook-options">
-                    <label>
-                        <input type="checkbox" id="webhook-auto-update" checked>
-                        Auto-send updates when rankings change
-                    </label>
-                    <label>
-                        <input type="checkbox" id="webhook-top-only">
-                        Only send top 3 rankings
-                    </label>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Tables -->
