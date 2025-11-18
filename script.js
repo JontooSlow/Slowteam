@@ -1,21 +1,4 @@
-
-document.addEventListener("DOMContentLoaded", async function() {
-    const contentIds = ['table1', 'table2', 'table3', 'table4', 'table5', 'table6', 'table7', 'table8', 'table9'];
-    
-    // Show loading state
-    const tableContents = document.querySelectorAll('.table-content');
-    tableContents.forEach(content => {
-        content.classList.add('loading');
-    });
-    
-    // Fetch all data
-    const promises = RANGES.map(range => fetchData(range));
-    const allData = await Promise.all(promises);
-    
-    // Populate tables
-    for (let i = 0; i < RANGES.length; i++) {
-        populateTable(contentIds[i], allData[i]);
-    }const SPREADSHEET_ID = '1Z6MkmyCU_xELc_riP_xeCRzXr4rNhTQ2pyjwQ0ZcGYk';
+const SPREADSHEET_ID = '1Z6MkmyCU_xELc_riP_xeCRzXr4rNhTQ2pyjwQ0ZcGYk';
 const API_KEY = 'AIzaSyBmSkNijS0qEa9j8ZrvFItYggN_FgXe5jg';
 
 const RANGES = [
@@ -35,13 +18,13 @@ const ELEMENT_NAMES = [
 ];
 
 const ELEMENT_EMOJIS = {
-    'Phys': '💪',
+    'Phys': '⚔️',
     'Light': '✨',
     'Dark': '🌑',
     'Fire': '🔥',
     'Ice': '❄️',
     'Elec': '⚡',
-    'Force': '🌀',
+    'Force': '🌪️',
     'Contribution': '⭐',
     'Average Score': '📊'
 };
@@ -53,9 +36,9 @@ const ELEMENT_COLORS = {
     'Fire': 0xFF4500,
     'Ice': 0x00CED1,
     'Elec': 0xFFD700,
-    'Force': 0x9370DB,
+    'Force': 0x87CEEB,
     'Contribution': 0xFF69B4,
-    'Average Score': 0x32CD32
+    'Average Score': 0xFFA500
 };
 
 let tableData = {}; // Store original data for sorting
@@ -244,6 +227,23 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+document.addEventListener("DOMContentLoaded", async function() {
+    const contentIds = ['table1', 'table2', 'table3', 'table4', 'table5', 'table6', 'table7', 'table8', 'table9'];
+    
+    // Show loading state
+    const tableContents = document.querySelectorAll('.table-content');
+    tableContents.forEach(content => {
+        content.classList.add('loading');
+    });
+    
+    // Fetch all data
+    const promises = RANGES.map(range => fetchData(range));
+    const allData = await Promise.all(promises);
+    
+    // Populate tables
+    for (let i = 0; i < RANGES.length; i++) {
+        populateTable(contentIds[i], allData[i]);
+    }
     
     // Remove loading state
     tableContents.forEach(content => {
