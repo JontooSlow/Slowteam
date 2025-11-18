@@ -62,7 +62,7 @@ async function fetchData(range) {
     }
 }
 
-function populateTable(tableId, data) {
+async function populateTable(tableId, data) {
     const tableBody = document.getElementById(tableId).querySelector('tbody');
     tableBody.innerHTML = '';
     
@@ -106,14 +106,18 @@ function populateTable(tableId, data) {
     // Add click handlers to table headers for sorting
     addSortHandlers(tableId);
     
-    // Save current data as previous for next load (always save)
-    localStorage.setItem(`previous_${tableId}`, JSON.stringify(data));
-    
     // Send webhook update only if data has changed
     const tableIndex = parseInt(tableId.replace('table', '')) - 1;
     if (tableIndex >= 0 && tableIndex < ELEMENT_NAMES.length) {
-        // Check if data changed and send webhook if needed (async, don't wait)
-        sendRankingUpdate(tableIndex, ELEMENT_NAMES[tableIndex], data);
+        // Check if data changed and send webhook if needed
+        const shouldSave = await sendRankingUpdate(tableIndex, ELEMENT_NAMES[tableIndex], data);
+        
+        // Save current data as previous for next load ONLY AFTER checking for changes
+        // This ensures we compare with the OLD data, not the new data
+        localStorage.setItem(`previous_${tableId}`, JSON.stringify(data));
+    } else {
+        // Save data even if tableIndex is invalid
+        localStorage.setItem(`previous_${tableId}`, JSON.stringify(data));
     }
 }
 
@@ -256,7 +260,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     
     // Populate tables
     for (let i = 0; i < RANGES.length; i++) {
-        populateTable(contentIds[i], allData[i]);
+        await populateTable(contentIds[i], allData[i]);
     }
     
     // Remove loading state
@@ -356,32 +360,53 @@ async function sendRankingUpdate(elementIndex, elementName, data) {
     
     // Skip if no previous data (first load) - don't send on first load
     if (!previousData || previousData.length === 0) {
-        // First load - don't send
-        return false;
+        console.log(`[${tableId}] First load - skipping webhook`);
+        return true; // Return true to allow saving
     }
     
-    // Normalize data for comparison (remove empty rows, trim strings)
+    // Normalize data for comparison (remove empty rows, trim strings, normalize numbers)
     const normalizeData = (dataArray) => {
+        if (!dataArray || !Array.isArray(dataArray)) return [];
+        
         return dataArray
-            .filter(row => row && row.length > 0 && row.some(cell => cell && cell.toString().trim()))
-            .map(row => row.map(cell => (cell || '').toString().trim()));
+            .filter(row => row && Array.isArray(row) && row.length > 0)
+            .map(row => {
+                return row.map(cell => {
+                    if (cell === null || cell === undefined) return '';
+                    const str = cell.toString().trim();
+                    // Try to normalize numbers
+                    const num = parseFloat(str);
+                    if (!isNaN(num) && str === num.toString()) {
+                        return num;
+                    }
+                    return str;
+                });
+            })
+            .filter(row => row.some(cell => cell !== ''));
     };
     
     const normalizedPrevious = normalizeData(previousData);
     const normalizedCurrent = normalizeData(data);
     
     // Compare normalized data
-    const dataChanged = JSON.stringify(normalizedPrevious) !== JSON.stringify(normalizedCurrent);
+    const prevStr = JSON.stringify(normalizedPrevious);
+    const currStr = JSON.stringify(normalizedCurrent);
+    const dataChanged = prevStr !== currStr;
+    
+    console.log(`[${tableId}] Previous: ${normalizedPrevious.length} rows, Current: ${normalizedCurrent.length} rows`);
+    console.log(`[${tableId}] Changed: ${dataChanged}`);
     
     if (!dataChanged) {
         // No changes, don't send
-        return false;
+        console.log(`[${tableId}] No changes detected - skipping webhook`);
+        return true; // Return true to allow saving (data is the same)
     }
     
     // Data has changed - send update
+    console.log(`[${tableId}] Changes detected - sending webhook`);
     const embed = createRankingEmbed(elementName, data);
     await sendDiscordWebhook(DISCORD_WEBHOOK_URL, null, [embed]);
-    return true;
+    return true; // Return true to allow saving
 }
 
 // Function to manually trigger ranking update (can be called from browser console)
