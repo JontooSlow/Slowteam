@@ -78,10 +78,9 @@ function populateTable(tableId, data) {
     // Store current data
     tableData[tableId] = data;
     
-    // Save current data as previous for next load (in localStorage)
-    localStorage.setItem(`previous_${tableId}`, JSON.stringify(data));
-    
     if (data.length === 0) {
+        // Save empty data to localStorage
+        localStorage.setItem(`previous_${tableId}`, JSON.stringify(data));
         return;
     }
     
@@ -107,9 +106,13 @@ function populateTable(tableId, data) {
     // Add click handlers to table headers for sorting
     addSortHandlers(tableId);
     
+    // Save current data as previous for next load (always save)
+    localStorage.setItem(`previous_${tableId}`, JSON.stringify(data));
+    
     // Send webhook update only if data has changed
     const tableIndex = parseInt(tableId.replace('table', '')) - 1;
     if (tableIndex >= 0 && tableIndex < ELEMENT_NAMES.length) {
+        // Check if data changed and send webhook if needed (async, don't wait)
         sendRankingUpdate(tableIndex, ELEMENT_NAMES[tableIndex], data);
     }
 }
@@ -351,22 +354,34 @@ async function sendRankingUpdate(elementIndex, elementName, data) {
     const tableId = `table${elementIndex + 1}`;
     const previousData = previousTableData[tableId];
     
-    // Skip if no previous data (first load) or if data hasn't changed
+    // Skip if no previous data (first load) - don't send on first load
     if (!previousData || previousData.length === 0) {
-        // First load - don't send, just store the data
-        return;
+        // First load - don't send
+        return false;
     }
     
-    // Compare data - check if anything changed
-    const dataChanged = JSON.stringify(previousData) !== JSON.stringify(data);
+    // Normalize data for comparison (remove empty rows, trim strings)
+    const normalizeData = (dataArray) => {
+        return dataArray
+            .filter(row => row && row.length > 0 && row.some(cell => cell && cell.toString().trim()))
+            .map(row => row.map(cell => (cell || '').toString().trim()));
+    };
+    
+    const normalizedPrevious = normalizeData(previousData);
+    const normalizedCurrent = normalizeData(data);
+    
+    // Compare normalized data
+    const dataChanged = JSON.stringify(normalizedPrevious) !== JSON.stringify(normalizedCurrent);
     
     if (!dataChanged) {
-        return; // No changes, don't send
+        // No changes, don't send
+        return false;
     }
     
     // Data has changed - send update
     const embed = createRankingEmbed(elementName, data);
     await sendDiscordWebhook(DISCORD_WEBHOOK_URL, null, [embed]);
+    return true;
 }
 
 // Function to manually trigger ranking update (can be called from browser console)
