@@ -36,9 +36,9 @@ const ELEMENT_COLORS = {
     'Fire': 0xFF4500,
     'Ice': 0x00CED1,
     'Elec': 0xFFD700,
-    'Force': 0x87CEEB,
+    'Force': 0x32CD32,
     'Contribution': 0xFF69B4,
-    'Average Score': 0xFFA500
+    'Average Score': 0x9370DB
 };
 
 let tableData = {}; // Store original data for sorting
@@ -499,4 +499,5 @@ window.sendRankingUpdate = async function() {
     await sendAllRankingsUpdate();
     alert('Ranking update sent to Discord!');
 };
+
 
