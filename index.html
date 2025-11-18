@@ -5,17 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slow ranking</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Slow ranking</h1>
-    
-    <!-- Filter -->
-    <input type="text" id="filter" placeholder="Filter by name" oninput="filterTables()">
+    <div class="header">
+        <h1>⚡ Slow Ranking ⚡</h1>
+        <div class="filter-container">
+            <input type="text" id="filter" placeholder="🔍 Search by name..." oninput="filterTables()">
+        </div>
+    </div>
 
     <!-- Tables -->
     <div class="tables">
-        <div class="table-container">
-            <div class="title">Phys</div>
+        <div class="table-container" data-element="phys">
+            <div class="title">
+                <span class="element-icon">💪</span>
+                <span>Phys</span>
+            </div>
             <div class="table-content">
                 <table id="table1" class="results-table">
                     <thead>
@@ -29,10 +37,12 @@
                 </table>
             </div>
         </div>
-        
-        <!-- Repeat for other tables -->
-        <div class="table-container">
-            <div class="title">Light</div>
+
+        <div class="table-container" data-element="light">
+            <div class="title">
+                <span class="element-icon">✨</span>
+                <span>Light</span>
+            </div>
             <div class="table-content">
                 <table id="table2" class="results-table">
                     <thead>
@@ -47,8 +57,11 @@
             </div>
         </div>
 
-        <div class="table-container">
-            <div class="title">Dark</div>
+        <div class="table-container" data-element="dark">
+            <div class="title">
+                <span class="element-icon">🌑</span>
+                <span>Dark</span>
+            </div>
             <div class="table-content">
                 <table id="table3" class="results-table">
                     <thead>
@@ -62,8 +75,12 @@
                 </table>
             </div>
         </div>
-        <div class="table-container">
-            <div class="title">Fire</div>
+
+        <div class="table-container" data-element="fire">
+            <div class="title">
+                <span class="element-icon">🔥</span>
+                <span>Fire</span>
+            </div>
             <div class="table-content">
                 <table id="table4" class="results-table">
                     <thead>
@@ -78,8 +95,11 @@
             </div>
         </div>
 
-        <div class="table-container">
-            <div class="title">Ice</div>
+        <div class="table-container" data-element="ice">
+            <div class="title">
+                <span class="element-icon">❄️</span>
+                <span>Ice</span>
+            </div>
             <div class="table-content">
                 <table id="table5" class="results-table">
                     <thead>
@@ -94,8 +114,11 @@
             </div>
         </div>
 
-        <div class="table-container">
-            <div class="title">Elec</div>
+        <div class="table-container" data-element="elec">
+            <div class="title">
+                <span class="element-icon">⚡</span>
+                <span>Elec</span>
+            </div>
             <div class="table-content">
                 <table id="table6" class="results-table">
                     <thead>
@@ -110,8 +133,11 @@
             </div>
         </div>
 
-        <div class="table-container">
-            <div class="title">Force</div>
+        <div class="table-container" data-element="force">
+            <div class="title">
+                <span class="element-icon">🌀</span>
+                <span>Force</span>
+            </div>
             <div class="table-content">
                 <table id="table7" class="results-table">
                     <thead>
@@ -125,9 +151,12 @@
                 </table>
             </div>
         </div>
-        
-        <div class="table-container">
-            <div class="title">Contribution</div>
+
+        <div class="table-container" data-element="contribution">
+            <div class="title">
+                <span class="element-icon">⭐</span>
+                <span>Contribution</span>
+            </div>
             <div class="table-content">
                 <table id="table8" class="results-table">
                     <thead>
@@ -141,9 +170,12 @@
                 </table>
             </div>
         </div>
-        
-        <div class="table-container">
-            <div class="title">Average score</div>
+
+        <div class="table-container" data-element="average">
+            <div class="title">
+                <span class="element-icon">📊</span>
+                <span>Average score</span>
+            </div>
             <div class="table-content">
                 <table id="table9" class="results-table">
                     <thead>
@@ -158,7 +190,7 @@
             </div>
         </div>
     </div>
-    
+
     <script src="script.js"></script>
 </body>
 </html>
